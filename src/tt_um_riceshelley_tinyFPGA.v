@@ -25,7 +25,6 @@ module tt_um_riceshelley_tinyFPGA (
 
     wire rst = (!rst_n) & (prog_en == 1'b0);
 
-
     wire [BELS - 1 : 0] fpga_out;
 
     // assign inputs to cluster

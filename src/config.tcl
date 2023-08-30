@@ -11,6 +11,8 @@ set script_dir [file dirname [file normalize [info script]]]
 # - the list of source files
 source $::env(DESIGN_DIR)/user_config.tcl
 
+set ::env(QUIT_ON_SYNTH_CHECKS) 0
+
 # save some time
 set ::env(RUN_KLAYOUT_XOR) 0
 set ::env(RUN_KLAYOUT_DRC) 0
