@@ -3,25 +3,6 @@ package fabgen.primitives
 import spinal.core._
 import spinal.lib._
 
-/*
-<pb_type name="lut6" blif_model=".names" num_pb="1" class="lut">
-
-              <input name="in" num_pins="6" port_class="lut_in"/>
-              <output name="out" num_pins="1" port_class="lut_out"/>
-
-              <!-- LUT timing using delay matrix -->
-              <delay_matrix type="max" in_port="lut6.in" out_port="lut6.out">
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-              </delay_matrix>
-
-  </pb_type>
- */
-
 case class Lut(inputCnt: Int) extends Component with FabricPrimitive {
 
   //////////////////////////////////////////////////////////
