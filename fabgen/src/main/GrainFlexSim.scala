@@ -59,6 +59,8 @@ object GrainFlexSim extends App {
     // Create programming interface driver
     val pDriver = ProgIfaceDriver(progIface = dut.io.progIface)
 
+    dut.io.designEnable #= true
+
     dut.clockDomain.forkStimulus(period = 10 ns)
     dut.clockDomain.waitRisingEdge(100)
 

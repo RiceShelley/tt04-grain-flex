@@ -11,6 +11,8 @@ module tb (
     input wire clk,
     input wire rst_n,
 
+    input wire ena,
+
     input wire progClk,
     input wire progRst,
     input wire progEn,
@@ -47,7 +49,7 @@ module tb (
         .uio_out(fpgaOutputs),
         .uio_oe(),
 
-        .ena(1'b1),
+        .ena(ena),
         .clk(clk),
         .rst_n(rst_n)
     );

@@ -35,6 +35,7 @@ module tt_um_riceshelley_tinyFPGA (
         .io_progIface_en(progEn),
         .io_progIface_dIn(progDataIn),
         .io_progIface_dOut(progDataOut),
+        .io_designEnable(ena),
         .clk(clk),
         .reset(reset)
     );

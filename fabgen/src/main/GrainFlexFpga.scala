@@ -11,6 +11,8 @@ case class GrainFlexFpga(ioPinCnt: Int = 8) extends Component {
   val io = new Bundle {
     val ioPins = master(TriStateArray(ioPinCnt bits))
     val progIface = slave(new ProgInterface())
+    // ACTIVE HIGH
+    val designEnable = in Bool()
   }
 
   //////////////////////////////////////////////////////////
@@ -28,6 +30,7 @@ case class GrainFlexFpga(ioPinCnt: Int = 8) extends Component {
   //////////////////////////////////////////////////////////
   val clb0 = Clb(inputCnt = 4, belCnt = 4, belInputWidth = 4)
   clb0.progIface.chain(ioBuf.progIface)
+  clb0.io.designEnable := io.designEnable
 
   //////////////////////////////////////////////////////////
   // Fabric input / output mux-ing to CLB

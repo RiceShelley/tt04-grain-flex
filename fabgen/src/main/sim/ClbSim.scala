@@ -15,7 +15,7 @@ object ClbConfig {
   def apply(
       clb: Clb,
       lutFuncSeq: Seq[Tuple2[(Boolean*) => Boolean, Boolean]],
-      lutInputPinsSelSeq : Seq[Seq[Int]],
+      lutInputPinsSelSeq: Seq[Seq[Int]],
       lutInputCnt: Int
   ) = {
     clb.belInputPinsMux.zip(lutFuncSeq).zip(lutInputPinsSelSeq).map { case ((belInputMuxs, lutFunc), lutInputPinsSel) =>
@@ -34,9 +34,7 @@ object ClbConfig {
           // Set mux sel line to pins index
           // BitStream(Seq.tabulate[Boolean](belPinInputMux.configDepth())(n => ((idx >> n) & 0x1) == 1))
           BitStream(
-            Seq.tabulate[Boolean](belPinInputMux.configDepth())(n =>
-              ((pinSelect >> n) & 0x1) == 1
-            )
+            Seq.tabulate[Boolean](belPinInputMux.configDepth())(n => ((pinSelect >> n) & 0x1) == 1)
           )
         }
 
@@ -46,76 +44,77 @@ object ClbConfig {
 }
 
 object ClbSim extends App {
-  Config.sim.compile(Clb(inputCnt = 4, belCnt = 4, belInputWidth = 4)).doSim {
-    dut =>
-      // Create programming interface driver
-      val pDriver = ProgIfaceDriver(progIface = dut.progIface)
+  Config.sim.compile(Clb(inputCnt = 4, belCnt = 4, belInputWidth = 4)).doSim { dut =>
+    // Create programming interface driver
+    val pDriver = ProgIfaceDriver(progIface = dut.progIface)
 
-      dut.clockDomain.forkStimulus(period = 10 ns)
-      dut.clockDomain.waitRisingEdge(100)
+    dut.io.designEnable #= true
 
-      val combOutput = true
+    dut.clockDomain.forkStimulus(period = 10 ns)
+    dut.clockDomain.waitRisingEdge(100)
 
-      val lutTestFuncs = Seq(
-        Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
-          (in => !in(3) ^ in(2) & in(1) | in(0), combOutput),
-          (in => !in(3) & !in(2) & in(1) ^ !in(0), combOutput),
-          (in => in(3) & in(2) | in(1) & in(0), combOutput),
-          (in => in(3) & !in(2) | in(1) & in(0), combOutput)
-        ),
-        Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
-          (in => in(3) & in(2) & in(1) & in(0), combOutput),
-          (in => in(3) & !in(2) & in(1) & !in(0), combOutput),
-          (in => !in(3) & in(2) & in(1) & in(0), combOutput),
-          (in => !in(3) & !in(2) & in(1) & in(0), combOutput)
-        ),
-        Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
-          (in => in(3) ^ in(2) & in(1) & in(0), combOutput),
-          (in => in(3) & !in(2) & in(1) & !in(0), combOutput),
-          (in => !in(3) & in(2) & in(1) ^ in(0), combOutput),
-          (in => !in(3) | !in(2) & in(1) ^ in(0), combOutput)
-        ),
-        Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
-          (in => in(3) & in(2) & in(1) & in(0), combOutput),
-          (in => !in(3) | !in(2) & in(1) & !in(0), combOutput),
-          (in => !in(3) ^ in(2) & in(1) ^ in(0), combOutput),
-          (in => !in(3) | !in(2) ^ in(1) ^ in(0), combOutput)
+    val combOutput = true
+
+    val lutTestFuncs = Seq(
+      Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
+        (in => !in(3) ^ in(2) & in(1) | in(0), combOutput),
+        (in => !in(3) & !in(2) & in(1) ^ !in(0), combOutput),
+        (in => in(3) & in(2) | in(1) & in(0), combOutput),
+        (in => in(3) & !in(2) | in(1) & in(0), combOutput)
+      ),
+      Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
+        (in => in(3) & in(2) & in(1) & in(0), combOutput),
+        (in => in(3) & !in(2) & in(1) & !in(0), combOutput),
+        (in => !in(3) & in(2) & in(1) & in(0), combOutput),
+        (in => !in(3) & !in(2) & in(1) & in(0), combOutput)
+      ),
+      Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
+        (in => in(3) ^ in(2) & in(1) & in(0), combOutput),
+        (in => in(3) & !in(2) & in(1) & !in(0), combOutput),
+        (in => !in(3) & in(2) & in(1) ^ in(0), combOutput),
+        (in => !in(3) | !in(2) & in(1) ^ in(0), combOutput)
+      ),
+      Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
+        (in => in(3) & in(2) & in(1) & in(0), combOutput),
+        (in => !in(3) | !in(2) & in(1) & !in(0), combOutput),
+        (in => !in(3) ^ in(2) & in(1) ^ in(0), combOutput),
+        (in => !in(3) | !in(2) ^ in(1) ^ in(0), combOutput)
+      )
+    )
+
+    for (lutFuncSeq <- lutTestFuncs) {
+      val config = ClbConfig.apply(
+        clb = dut,
+        lutInputCnt = 4,
+        lutFuncSeq = lutFuncSeq,
+        lutInputPinsSelSeq = Seq(
+          Seq[Int](0, 1, 2, 3),
+          Seq[Int](0, 1, 2, 3),
+          Seq[Int](0, 1, 2, 3),
+          Seq[Int](0, 1, 2, 3)
         )
       )
 
-      for (lutFuncSeq <- lutTestFuncs) {
-        val config = ClbConfig.apply(
-          clb = dut,
-          lutInputCnt = 4,
-          lutFuncSeq = lutFuncSeq,
-          lutInputPinsSelSeq = Seq(
-            Seq[Int](0, 1, 2, 3),
-            Seq[Int](0, 1, 2, 3),
-            Seq[Int](0, 1, 2, 3),
-            Seq[Int](0, 1, 2, 3)
-          )
-        )
+      // Program random config to lut
+      pDriver.prog(config, 10 ns)
 
-        // Program random config to lut
-        pDriver.prog(config, 10 ns)
-
-        // drive each possible input into CLB
-        for (i <- 0 to (1 << dut.io.clbIn.getWidth) - 1) {
-          // Assign input to CLB
-          dut.io.clbIn #= i
-          // Wait for output to propagate
-          sleep(timeToLong(10 ns))
-          // Get outputs from dut
-          val actual = dut.io.clbOut.toBooleans.toList
-          // Calculate the expected outputs
-          val expected = lutFuncSeq.map(_._1(dut.io.clbIn.toBooleans))
-          // Verify outputs
-          if (actual != expected) {
-            println(f"expected ${expected} actual ${actual}")
-          }
-          assert(actual == expected)
+      // drive each possible input into CLB
+      for (i <- 0 to (1 << dut.io.clbIn.getWidth) - 1) {
+        // Assign input to CLB
+        dut.io.clbIn #= i
+        // Wait for output to propagate
+        sleep(timeToLong(10 ns))
+        // Get outputs from dut
+        val actual = dut.io.clbOut.toBooleans.toList
+        // Calculate the expected outputs
+        val expected = lutFuncSeq.map(_._1(dut.io.clbIn.toBooleans))
+        // Verify outputs
+        if (actual != expected) {
+          println(f"expected ${expected} actual ${actual}")
         }
-        dut.clockDomain.waitRisingEdge(100)
+        assert(actual == expected)
       }
+      dut.clockDomain.waitRisingEdge(100)
+    }
   }
 }

@@ -27,6 +27,7 @@ async def test_fpga(dut):
     dut._log.info("start")
 
     dut.rst_n.value = 0
+    dut.ena.value = 1
     dut.progEn.value = 0
     dut.progDataIn.value = 0
 

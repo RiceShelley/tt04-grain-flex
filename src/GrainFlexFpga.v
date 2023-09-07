@@ -1,6 +1,6 @@
 // Generator : SpinalHDL v1.9.3    git head : 029104c77a54c53f1edda327a3bea333f7d65fd9
 // Component : GrainFlexFpga
-// Git hash  : b8d69b2ee5df0933bf8be9bc61da2e93f8d87b8f
+// Git hash  : 6636fe19c59eba9b6b9f4fcaf450cb24789c8260
 
 `timescale 1ns/1ps
 
@@ -13,6 +13,7 @@ module GrainFlexFpga (
   input               io_progIface_en,
   input               io_progIface_dIn,
   output              io_progIface_dOut,
+  input               io_designEnable,
   input               clk,
   input               reset
 );
@@ -94,6 +95,7 @@ module GrainFlexFpga (
     .progIface_dOut  (clb0_progIface_dOut   ), //o
     .io_clbIn        (clb0_io_clbIn[3:0]    ), //i
     .io_clbOut       (clb0_io_clbOut[3:0]   ), //o
+    .io_designEnable (io_designEnable       ), //i
     .clk             (clk                   ), //i
     .reset           (reset                 )  //i
   );
@@ -351,6 +353,7 @@ module Clb (
   output              progIface_dOut,
   input      [3:0]    io_clbIn,
   output     [3:0]    io_clbOut,
+  input               io_designEnable,
   input               clk,
   input               reset
 );
@@ -861,10 +864,10 @@ module Clb (
   assign belInputPinsMux_0_0_io_muxIn_6 = _zz_io_muxIn_0[6];
   assign belInputPinsMux_0_0_io_muxIn_7 = _zz_io_muxIn_0[7];
   always @(*) begin
-    bels_0_io_belIn[0] = (belInputPinsMux_0_0_io_muxOut && (progIface_en == 1'b0));
-    bels_0_io_belIn[1] = (belInputPinsMux_0_1_io_muxOut && (progIface_en == 1'b0));
-    bels_0_io_belIn[2] = (belInputPinsMux_0_2_io_muxOut && (progIface_en == 1'b0));
-    bels_0_io_belIn[3] = (belInputPinsMux_0_3_io_muxOut && (progIface_en == 1'b0));
+    bels_0_io_belIn[0] = ((belInputPinsMux_0_0_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_0_io_belIn[1] = ((belInputPinsMux_0_1_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_0_io_belIn[2] = ((belInputPinsMux_0_2_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_0_io_belIn[3] = ((belInputPinsMux_0_3_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
   end
 
   assign _zz_io_muxIn_0_1 = {belsOut,io_clbIn};
@@ -904,10 +907,10 @@ module Clb (
   assign belInputPinsMux_1_0_io_muxIn_6 = _zz_io_muxIn_0_4[6];
   assign belInputPinsMux_1_0_io_muxIn_7 = _zz_io_muxIn_0_4[7];
   always @(*) begin
-    bels_1_io_belIn[0] = (belInputPinsMux_1_0_io_muxOut && (progIface_en == 1'b0));
-    bels_1_io_belIn[1] = (belInputPinsMux_1_1_io_muxOut && (progIface_en == 1'b0));
-    bels_1_io_belIn[2] = (belInputPinsMux_1_2_io_muxOut && (progIface_en == 1'b0));
-    bels_1_io_belIn[3] = (belInputPinsMux_1_3_io_muxOut && (progIface_en == 1'b0));
+    bels_1_io_belIn[0] = ((belInputPinsMux_1_0_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_1_io_belIn[1] = ((belInputPinsMux_1_1_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_1_io_belIn[2] = ((belInputPinsMux_1_2_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_1_io_belIn[3] = ((belInputPinsMux_1_3_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
   end
 
   assign _zz_io_muxIn_0_5 = {belsOut,io_clbIn};
@@ -947,10 +950,10 @@ module Clb (
   assign belInputPinsMux_2_0_io_muxIn_6 = _zz_io_muxIn_0_8[6];
   assign belInputPinsMux_2_0_io_muxIn_7 = _zz_io_muxIn_0_8[7];
   always @(*) begin
-    bels_2_io_belIn[0] = (belInputPinsMux_2_0_io_muxOut && (progIface_en == 1'b0));
-    bels_2_io_belIn[1] = (belInputPinsMux_2_1_io_muxOut && (progIface_en == 1'b0));
-    bels_2_io_belIn[2] = (belInputPinsMux_2_2_io_muxOut && (progIface_en == 1'b0));
-    bels_2_io_belIn[3] = (belInputPinsMux_2_3_io_muxOut && (progIface_en == 1'b0));
+    bels_2_io_belIn[0] = ((belInputPinsMux_2_0_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_2_io_belIn[1] = ((belInputPinsMux_2_1_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_2_io_belIn[2] = ((belInputPinsMux_2_2_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_2_io_belIn[3] = ((belInputPinsMux_2_3_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
   end
 
   assign _zz_io_muxIn_0_9 = {belsOut,io_clbIn};
@@ -990,10 +993,10 @@ module Clb (
   assign belInputPinsMux_3_0_io_muxIn_6 = _zz_io_muxIn_0_12[6];
   assign belInputPinsMux_3_0_io_muxIn_7 = _zz_io_muxIn_0_12[7];
   always @(*) begin
-    bels_3_io_belIn[0] = (belInputPinsMux_3_0_io_muxOut && (progIface_en == 1'b0));
-    bels_3_io_belIn[1] = (belInputPinsMux_3_1_io_muxOut && (progIface_en == 1'b0));
-    bels_3_io_belIn[2] = (belInputPinsMux_3_2_io_muxOut && (progIface_en == 1'b0));
-    bels_3_io_belIn[3] = (belInputPinsMux_3_3_io_muxOut && (progIface_en == 1'b0));
+    bels_3_io_belIn[0] = ((belInputPinsMux_3_0_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_3_io_belIn[1] = ((belInputPinsMux_3_1_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_3_io_belIn[2] = ((belInputPinsMux_3_2_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
+    bels_3_io_belIn[3] = ((belInputPinsMux_3_3_io_muxOut && (progIface_en == 1'b0)) && (io_designEnable == 1'b1));
   end
 
   assign _zz_io_muxIn_0_13 = {belsOut,io_clbIn};

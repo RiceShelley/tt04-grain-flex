@@ -8,6 +8,7 @@ case class Clb(inputCnt: Int, belCnt: Int, belInputWidth: Int) extends Component
   val io = new Bundle {
     val clbIn = in Bits (inputCnt bits)
     val clbOut = out Bits (belCnt bits)
+    val designEnable = in Bool()
   }
 
   val bels = Seq.tabulate[Bel](belCnt)(_ => Bel(inputCnt = belInputWidth))
@@ -19,7 +20,7 @@ case class Clb(inputCnt: Int, belCnt: Int, belInputWidth: Int) extends Component
       // Each pin can select between all CLB inputs and all BEL outputs
       val belInputPinMux = ProgMux((belsOut ## io.clbIn).asBools)
       // assign output of mux to BEL input pin
-      belInputPin := belInputPinMux.io.muxOut && (progIface.en === False)
+      belInputPin := belInputPinMux.io.muxOut && (progIface.en === False) && (io.designEnable === True)
       belInputPinMux
     }
   )
