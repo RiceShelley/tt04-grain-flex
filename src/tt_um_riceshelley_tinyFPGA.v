@@ -13,6 +13,31 @@ module tt_um_riceshelley_tinyFPGA (
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
 );
+
+    wire reset = ~rst_n;
+
+    wire progClk = ui_in[0];
+    wire progRst = ui_in[1];
+    wire progEn = ui_in[2];
+    wire progDataIn = ui_in[3];
+    wire progDataOut;
+
+    assign uio_out[0] = progDataOut;
+
+    GrainFlexFpga grainFlex(
+        .io_ioPins_read(uio_in),
+        .io_ioPins_write(uio_out),
+        .io_ioPins_writeEnable(uio_oe),
+        .io_progIface_clk(progClk),
+        .io_progIface_reset(progRst),
+        .io_progIface_en(progEn),
+        .io_progIface_dIn(progDataIn),
+        .io_progIface_dOut(progDataOut),
+        .clk(clk),
+        .reset(reset)
+    );
+
+/*
     localparam BEL_INPUT_WIDTH = 5;
     localparam BELS = 4;
     localparam CLUSTER_INPUT_WIDTH = 5;
@@ -79,5 +104,6 @@ module tt_um_riceshelley_tinyFPGA (
 
         assign prog_out = prog_mux_prog[BELS];
     endgenerate
+    */
 
 endmodule

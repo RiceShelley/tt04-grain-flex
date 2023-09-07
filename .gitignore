@@ -11,3 +11,5 @@ src/user_config.tcl
 tt/
 *.png
 *.svg
+.metals
+.scala-build
