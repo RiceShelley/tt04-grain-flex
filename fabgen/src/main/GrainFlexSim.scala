@@ -10,29 +10,42 @@ object GrainFlexConfig {
   def apply(fabric: GrainFlexFpga) = {
 
     // IO buffer configuration
-    val ioBuffConfig = BitStream(Seq(false, false, false, false, true, true, true, true))
+    val ioBuffConfig = BitStream(
+      Seq(false, false, false, false, true, true, true, true)
+    )
     assert(ioBuffConfig.bitStream.length == fabric.ioBuf.configDepth())
 
+    val combOutput = true
     // CLB configuration
     val clbConfig = ClbConfig(
       clb = fabric.clb0,
-      lutFuncSeq = Seq[(Boolean*) => Boolean](
-        in => in(3) & in(2) & in(1) & in(0),
-        in => in(3) & !in(2) & in(1) & !in(0),
-        in => !in(3) & in(2) & in(1) & in(0),
-        in => !in(3) & !in(2) & in(1) & in(0)
+      lutFuncSeq = Seq[Tuple2[(Boolean*) => Boolean, Boolean]](
+        (in => in(3) & in(2) & in(1) & in(0), combOutput),
+        (in => in(3) & !in(2) & in(1) & !in(0), combOutput),
+        (in => !in(3) & in(2) & in(1) & in(0), combOutput),
+        (in => !in(3) & !in(2) & in(1) & in(0), combOutput)
       ),
       lutInputCnt = fabric.clb0.belInputWidth
     )
 
     // CLB input pin mux-ing configuration
-    val clb0InputMuxs = fabric.clb0InputMuxs.zipWithIndex.map { case (pMux, idx) =>
-      BitStream(Seq.tabulate[Boolean](pMux.configDepth())(n => ((idx >> n) & 0x1) == 1))
+    val clb0InputMuxs = fabric.clb0InputMuxs.zipWithIndex.map {
+      case (pMux, idx) =>
+        BitStream(
+          Seq.tabulate[Boolean](pMux.configDepth())(n =>
+            ((idx >> n) & 0x1) == 1
+          )
+        )
     }
 
     // FPGA output pin mux-ing
-    val fabricOutputMuxs = fabric.fabricOutputPinMuxs.zipWithIndex.map { case (pMux, idx) =>
-      BitStream(Seq.tabulate[Boolean](pMux.configDepth())(n => ((idx >> n) & 0x1) == 1))
+    val fabricOutputMuxs = fabric.fabricOutputPinMuxs.zipWithIndex.map {
+      case (pMux, idx) =>
+        BitStream(
+          Seq.tabulate[Boolean](pMux.configDepth())(n =>
+            ((idx >> n) & 0x1) == 1
+          )
+        )
     }
 
     Seq(ioBuffConfig, clbConfig, clb0InputMuxs, fabricOutputMuxs)
@@ -47,10 +60,12 @@ object GrainFlexSim extends App {
     dut.clockDomain.forkStimulus(period = 10 ns)
     dut.clockDomain.waitRisingEdge(100)
 
-    val config = GrainFlexConfig(fabric = dut)
+    val shiftRegConfig = ShiftRegBitStream(fabric = dut)
+
+    //val config = GrainFlexConfig(fabric = dut)
 
     // Program FPGA
-    pDriver.prog(config, 10 ns)
+    pDriver.prog(shiftRegConfig, 10 ns)
 
     // Drive each possible input into FPGA
     for (i <- 0 to (1 << dut.clb0.io.clbIn.getWidth) - 1) {

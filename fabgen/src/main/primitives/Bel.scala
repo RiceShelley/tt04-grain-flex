@@ -60,7 +60,10 @@ case class Bel(inputCnt: Int) extends Component with FabricPrimitive {
           <direct name="direct4" input="bel.clk" output="ff.clk"/>
 
           <!-- PROG MUX VTR DESCRIPTION -->
-          ${pMux.vtrDesc(inputs = f"ff.Q ${lut.pbName}.out", output = "bel.out")}      
+          ${pMux.vtrDesc(
+        inputs = f"ff.Q ${lut.pbName}.out",
+        output = "bel.out"
+      )}      
         </interconnect>
       </pb_type> 
     """
