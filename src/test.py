@@ -5,6 +5,13 @@ import math
 
 
 async def progBitStream(dut, bitStream):
+    dut.progRst.value = 1
+    await RisingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+    dut.progRst.value = 0
+    await RisingEdge(dut.clk)
+    await RisingEdge(dut.clk)
     await RisingEdge(dut.clk)
     dut.progEn.value = 1
     dut.progClk.value = False
@@ -26,8 +33,11 @@ async def progBitStream(dut, bitStream):
 async def test_fpga(dut):
     dut._log.info("start")
 
+    dut.clk.value = 0
     dut.rst_n.value = 0
     dut.ena.value = 1
+    dut.progClk.value = 0
+    dut.progRst.value = 0
     dut.progEn.value = 0
     dut.progDataIn.value = 0
 
