@@ -42,6 +42,10 @@ module tb (
     assign progDataOut = outputs[0];
 
     tt_um_riceshelley_tinyFPGA dut(
+    `ifdef GL_TEST
+        .VPWR( 1'b1),
+        .VGND( 1'b0),
+    `endif
         .ui_in(inputs),
         .uo_out(outputs),
 
