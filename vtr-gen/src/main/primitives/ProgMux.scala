@@ -11,7 +11,7 @@ object ProgMux {
   }
 }
 
-case class ProgMux[T <: Data](gen : HardType[T], inputCnt: Int) extends Component with FabricPrimitive {
+case class ProgMux[T <: Data](gen: HardType[T], inputCnt: Int) extends Component with FabricPrimitive {
 
   val io = new Bundle {
     val muxIn = in(Vec(gen = gen, size = inputCnt))
@@ -35,12 +35,12 @@ case class ProgMux[T <: Data](gen : HardType[T], inputCnt: Int) extends Componen
     sel := U(selMem.asBits)
   }
 
-  io.muxOut := io.muxIn(sel)
+  io.muxOut := Mux(sel = progIface.en, whenTrue = gen().clearAll(), whenFalse = io.muxIn(sel))
 
   //////////////////////////////////////////////////////////
   // LUT VTR Description
   //////////////////////////////////////////////////////////
-  def vtrDesc(inputs : String, output : String) = {
+  def vtrDesc(inputs: String, output: String) = {
     f"""<mux name="mux_${this.name}" input="${inputs}" output="${output}"/>"""
   }
 }

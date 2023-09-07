@@ -39,9 +39,16 @@ object BitStreamFmt {
 
 case class ProgIfaceDriver(progIface: ProgInterface) {
 
+  progIface.reset #= true
+
   def prog(bitStream: Seq[_], clkPeriod: TimeNumber): Unit = {
     progIface.en #= true
     progIface.clk #= false
+
+    // Hold async reset high for a while
+    progIface.reset #= true
+    sleep(timeToLong(100 ns))
+    progIface.reset #= false
 
     BitStreamFmt(bitStream).foreach { bit =>
       progIface.dIn #= bit

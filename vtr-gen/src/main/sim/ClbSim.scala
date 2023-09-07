@@ -19,12 +19,8 @@ object ClbConfig {
         fourLutBuilder(idx, function = lutFunc)
       })
 
-      /*lutConfig.zipWithIndex.foreach { case (output, idx) =>
-        println(f"${idx} => ${output}")
-      }*/
-
       // Bel FF config
-      val registerOutput = BitStream(Seq.tabulate[Boolean](1) { _ => false })
+      val registerOutput = BitStream(Seq.tabulate[Boolean](1) { _ => true })
 
       // Bel input pin muxing configuration
       val belMuxConfig = belInputMuxs.toSeq.zipWithIndex.map { case (belPinInputMux, idx) =>

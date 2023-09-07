@@ -24,7 +24,7 @@ case class IOBuf(bufCnt: Int) extends Component with FabricPrimitive {
   io.buffs.writeEnable := pinDir
 
   val progClkArea = new ClockingArea(progIface.clkDom) {
-    val pinDirMem = Vec(gen = Reg(Bool()), size = bufCnt)
+    val pinDirMem = Vec(gen = Reg(Bool()).init(False), size = bufCnt)
     // Turn vec of registers into shift registers with enable
     progIface.dOut := pinDirMem.foldLeft(progIface.dIn) { case (last, cur) =>
       when(progIface.en) {

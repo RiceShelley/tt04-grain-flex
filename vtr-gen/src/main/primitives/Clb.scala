@@ -17,7 +17,7 @@ case class Clb(inputCnt: Int, belCnt: Int, belInputWidth: Int) extends Component
   val belInputPinsMux: Seq[Seq[ProgMux[Bool]]] = bels.map(bel =>
     bel.io.belIn.asBools.map { belInputPin =>
       // Each pin can select between all CLB inputs and all BEL outputs
-      val belInputPinMux = ProgMux((io.clbIn).asBools)
+      val belInputPinMux = ProgMux((belsOut ## io.clbIn).asBools)
       // assign output of mux to BEL input pin
       belInputPin := belInputPinMux.io.muxOut && (progIface.en === False)
       belInputPinMux

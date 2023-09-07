@@ -20,7 +20,7 @@ case class Lut(inputCnt: Int) extends Component with FabricPrimitive {
   val lut = Vec(gen = Bool(), size = lutSize)
 
   val progClkArea = new ClockingArea(progIface.clkDom) {
-    val lutMem = Vec(gen = Reg(Bool()), size = lutSize)
+    val lutMem = Vec(gen = Reg(Bool()).init(False), size = lutSize)
     // Turn vec of registers into shift registers with enable
     progIface.dOut := lutMem.foldLeft(progIface.dIn) { case (last, cur) =>
       when(progIface.en) {

@@ -11,7 +11,8 @@ class ProgInterface() extends Bundle with IMasterSlave {
   val dIn = Bool()
   val dOut = Bool()
 
-  val clkDom = ClockDomain(clock = clk, reset = reset)
+  val clkDom =
+    ClockDomain(clock = clk, reset = reset, config = ClockDomainConfig(clockEdge = RISING, resetKind = ASYNC))
 
   def connectFromTop(that: ProgInterface): ProgInterface = {
     this.clk := that.clk

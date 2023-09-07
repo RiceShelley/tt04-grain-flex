@@ -20,7 +20,7 @@ case class Bel(inputCnt: Int) extends Component with FabricPrimitive {
   dFF := lut.io.lutOut
 
   // Mux between comb LUT output or registered LUT output
-  val pMux = ProgMux(Vec(lut.io.lutOut, dFF))
+  val pMux = ProgMux(Vec(dFF, lut.io.lutOut))
   pMux.progIface.chain(lut.progIface)
 
   io.belOut := pMux.io.muxOut
@@ -32,7 +32,7 @@ case class Bel(inputCnt: Int) extends Component with FabricPrimitive {
   //////////////////////////////////////////////////////////
   // LUT VTR Description
   //////////////////////////////////////////////////////////
-  def vtrDesc(belAmt : Int) = {
+  def vtrDesc(belAmt: Int) = {
     f"""
       <!-- BASIC ELEMENT VTR DESCRIPTION -->
       <pb_type name="bel" num_pb="${belAmt}">
@@ -67,30 +67,5 @@ case class Bel(inputCnt: Int) extends Component with FabricPrimitive {
   }
 
   println(vtrDesc(belAmt = 1))
-
-  /*        <pb_type name="soft_logic" num_pb="1">
-          <input name="in" num_pins="6"/>
-          <output name="out" num_pins="1"/>
-          <mode name="n1_lut6">
-            <pb_type name="lut6" blif_model=".names" num_pb="1" class="lut">
-              <input name="in" num_pins="6" port_class="lut_in"/>
-              <output name="out" num_pins="1" port_class="lut_out"/>
-              <!-- LUT timing using delay matrix -->
-              <delay_matrix type="max" in_port="lut6.in" out_port="lut6.out">
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-                          2.690e-10
-              </delay_matrix>
-            </pb_type>
-            <interconnect>
-              <direct name="direct1" input="soft_logic.in[5:0]" output="lut6[0:0].in[5:0]"/>
-              <direct name="direct2" input="lut6[0:0].out" output="soft_logic.out[0:0]"/>
-            </interconnect>
-          </mode>
-        </pb_type>
-   */
 
 }
