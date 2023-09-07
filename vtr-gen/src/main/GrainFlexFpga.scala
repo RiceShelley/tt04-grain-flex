@@ -39,10 +39,9 @@ case class GrainFlexFpga(ioPinCnt: Int = 8) extends Component {
     pMux
   }
 
-  val clb0InputProgIfaceOut = clb0InputMuxs.foldLeft(clb0.progIface) {
-    case (pIface, pMux) =>
-      pMux.progIface.chain(pIface)
-      pMux.progIface
+  val clb0InputProgIfaceOut = clb0InputMuxs.foldLeft(clb0.progIface) { case (pIface, pMux) =>
+    pMux.progIface.chain(pIface)
+    pMux.progIface
   }
 
   // Allow every fabric output pin to select any clb0 output pin
@@ -52,13 +51,19 @@ case class GrainFlexFpga(ioPinCnt: Int = 8) extends Component {
     pMux
   }
 
-  val progIfaceEnd = fabricOutputPinMuxs.foldLeft(clb0InputProgIfaceOut) {
-    case (pIface, pMux) =>
-      pMux.progIface.chain(pIface)
-      pMux.progIface
+  val progIfaceEnd = fabricOutputPinMuxs.foldLeft(clb0InputProgIfaceOut) { case (pIface, pMux) =>
+    pMux.progIface.chain(pIface)
+    pMux.progIface
   }
 
   io.progIface.dOut := progIfaceEnd.dOut
+
+  def configDepth(): Int = {
+    ioBuf.configDepth() +
+      clb0.configDepth() +
+      clb0InputMuxs.map(_.configDepth()).sum +
+      fabricOutputPinMuxs.map(_.configDepth()).sum
+  }
 
 }
 

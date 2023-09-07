@@ -22,7 +22,7 @@ module tt_um_riceshelley_tinyFPGA (
     wire progDataIn = ui_in[3];
     wire progDataOut;
 
-    assign uio_out[0] = progDataOut;
+    assign uo_out[0] = progDataOut;
 
     GrainFlexFpga grainFlex(
         .io_ioPins_read(uio_in),
