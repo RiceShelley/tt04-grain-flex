@@ -10,10 +10,7 @@ ifneq ($(GATES),yes)
 
 # this is the only part you should need to modify:
 VERILOG_SOURCES += \
-$(PWD)/lut.v \
-$(PWD)/prog_mux.v \
-$(PWD)/bel.v \
-$(PWD)/logic_cluster.v \
+$(PWD)/GrainFlexFpga.v \
 $(PWD)/tt_um_riceshelley_tinyFPGA.v \
 ${PWD}/tb.v
 

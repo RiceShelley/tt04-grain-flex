@@ -16,8 +16,7 @@ case class Bel(inputCnt: Int) extends Component with FabricPrimitive {
   lut.progIface.connectFromTop(progIface)
 
   // Optional register at output of LUT
-  val dFF = Reg(Bool()) init (False)
-  dFF := lut.io.lutOut
+  val dFF: Bool = RegNextWhen(next = lut.io.lutOut, cond = (progIface.en === False)).init(False)
 
   // Mux between comb LUT output or registered LUT output
   val pMux = ProgMux(Vec(dFF, lut.io.lutOut))

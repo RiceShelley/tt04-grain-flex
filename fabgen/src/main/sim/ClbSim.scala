@@ -87,7 +87,13 @@ object ClbSim extends App {
         val config = ClbConfig.apply(
           clb = dut,
           lutInputCnt = 4,
-          lutFuncSeq = lutFuncSeq
+          lutFuncSeq = lutFuncSeq,
+          lutInputPinsSelSeq = Seq(
+            Seq[Int](0, 1, 2, 3),
+            Seq[Int](0, 1, 2, 3),
+            Seq[Int](0, 1, 2, 3),
+            Seq[Int](0, 1, 2, 3)
+          )
         )
 
         // Program random config to lut

@@ -1,6 +1,6 @@
 // Generator : SpinalHDL v1.9.3    git head : 029104c77a54c53f1edda327a3bea333f7d65fd9
 // Component : GrainFlexFpga
-// Git hash  : fe5dc282e099528b0ca199ea5071d1d52895a8a1
+// Git hash  : b8d69b2ee5df0933bf8be9bc61da2e93f8d87b8f
 
 `timescale 1ns/1ps
 
@@ -1235,6 +1235,7 @@ module Bel (
   wire                lut_4_io_lutOut;
   wire                pMux_progIface_dOut;
   wire                pMux_io_muxOut;
+  wire                when_Bel_l19;
   reg                 dFF;
 
   Lut_3 lut_4 (
@@ -1256,13 +1257,16 @@ module Bel (
     .io_muxIn_1      (lut_4_io_lutOut     ), //i
     .io_muxOut       (pMux_io_muxOut      )  //o
   );
+  assign when_Bel_l19 = (progIface_en == 1'b0);
   assign io_belOut = pMux_io_muxOut;
   assign progIface_dOut = pMux_progIface_dOut;
-  always @(posedge clk or posedge reset) begin
+  always @(posedge clk) begin
     if(reset) begin
       dFF <= 1'b0;
     end else begin
-      dFF <= lut_4_io_lutOut;
+      if(when_Bel_l19) begin
+        dFF <= lut_4_io_lutOut;
+      end
     end
   end
 
